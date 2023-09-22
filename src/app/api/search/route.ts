@@ -27,14 +27,22 @@ export async function GET(req: Request) {
     include: {
       _count: true,
     },
+    // select: {
+    //   _count: true,
+    //   id: true,
+    // },
     take: 5,
   });
-  let results = {
+
+  // Create an object to store both post and user results
+  const results = {
     posts: [] as Array<SearchPost>,
-    user: [] as Array<typeof userResults>,
+    users: [] as Array<(typeof userResults)[0]>, // Use the type of the first element in userResults
   };
-  results.posts.push(postResults);
-  results.user.push(userResults);
+
+  // Push the results into the respective arrays
+  results.posts.push(...postResults);
+  results.users.push(...userResults);
 
   return new Response(JSON.stringify(results));
 }

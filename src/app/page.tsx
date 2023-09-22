@@ -1,7 +1,5 @@
 import { CustomFeed } from "@/components/CustomFeed";
-import { FollowingCommunities } from "@/components/Followingcommunities";
 import { GeneralFeed } from "@/components/GeneralFeed";
-import { PopularCommunities } from "@/components/PopularCommunities";
 import { buttonVariants } from "@/components/ui/Button";
 import { getAuthSession } from "@/lib/auth";
 import { Home as HomeIcon } from "lucide-react";

@@ -5,8 +5,6 @@ import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/Toaster";
 import { Providers } from "@/components/Providers";
 import NextTopLoader from "nextjs-toploader";
-import { ContextMenu } from "@/components/ui/ContextMenu";
-import { ContextWrapper } from "@/components/ContextWrapper";
 export const metadata = {
   title: "Literary Loom",
 };
@@ -20,21 +18,21 @@ export default function RootLayout({
   authModal: React.ReactNode;
 }) {
   return (
-    <html
+       <html
       lang="en"
       className={cn(
         "bg-primary-colour text-slate-900 antialiased light",
         inter.className
       )}
     >
+      
       <link rel="icon" href="/logo.png" type="image/icon type" />
-
       <body className="min-h-screen pt-12 bg-primary-colour antialiased">
         <NextTopLoader showSpinner={false} crawl={false} />
         <Providers>
           {/* @ts-expect-error server component */}
           <Navbar />
-
+          
           {authModal}
           <div className="container max-w-7xl mx-auto h-full pt-12">
             {children}{" "}

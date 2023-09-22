@@ -9,6 +9,7 @@ import { CommentRequest } from "@/lib/validators/comment";
 import axios, { AxiosError } from "axios";
 import { useCustomToast } from "@/hooks/use-custom-toast";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface CreateCommentProps {
   postId: string;
@@ -16,6 +17,7 @@ interface CreateCommentProps {
 }
 
 export const CreateComment = ({ postId, replyToId }: CreateCommentProps) => {
+  const { data: session } = useSession();
   const [input, setInput] = useState<string>("");
   const { loginToast } = useCustomToast();
   const router = useRouter();
@@ -46,26 +48,30 @@ export const CreateComment = ({ postId, replyToId }: CreateCommentProps) => {
   });
   return (
     <div className="grid w-full gap-1.5">
-      <Label htmlFor="comment"> Your comment </Label>
-      <div className="mt-2">
-        <Textarea
-          id="comment"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          rows={1}
-          placeholder="What are your thoughts"
-          className="border-none"
-        />
-        <div className="mt-2 flex justify-end">
-          <Button
-            isLoading={isLoading}
-            disabled={input?.length === 0}
-            onClick={() => comment({ postId, text: input, replyToId })}
-          >
-            Post Comment
-          </Button>
-        </div>
-      </div>
+      {session?.user.id ? (
+        <>
+          <Label htmlFor="comment"> Your comment </Label>
+          <div className="mt-2">
+            <Textarea
+              id="comment"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              rows={1}
+              placeholder="What are your thoughts"
+              className="border-none"
+            />
+            <div className="mt-2 flex justify-end">
+              <Button
+                isLoading={isLoading}
+                disabled={input?.length === 0}
+                onClick={() => comment({ postId, text: input, replyToId })}
+              >
+                Post Comment
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 };

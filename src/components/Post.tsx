@@ -48,7 +48,7 @@ export const PostComponent = ({
   const postRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
   const router = useRouter();
-  const { mutate: deletePost } = useMutation({
+  const { mutate: deletePost, isLoading: deleteLoading } = useMutation({
     mutationFn: async ({ postId }: DeletePostPayload) => {
       if (session?.user.id !== post.authorId) return;
       const payload: DeletePostPayload = { postId };
@@ -81,7 +81,15 @@ export const PostComponent = ({
         />
         <div className="w-0 flex-1">
           <div className="max-h-40 mt-1 text-xs text-gray-500 ">
-            <span>Post created by {post.author.username} </span>{" "}
+            <span>
+              Post created by{" "}
+              <a
+                className="hover:underline hover:decoration-wavy hover:text-green-300"
+                href={`/profile/${post.author.id}`}
+              >
+                {post.author.username}
+              </a>{" "}
+            </span>{" "}
             {formatTimeToNow(new Date(post.createdAt))}
           </div>
           <a href={`/post/${post.id}`}>
@@ -131,6 +139,7 @@ export const PostComponent = ({
                       deletePost({ postId: post.id });
                     }}
                     type="submit"
+                    isLoading={deleteLoading}
                   >
                     Delete Post
                   </Button>
