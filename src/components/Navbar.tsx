@@ -20,7 +20,7 @@ export const Navbar = async () => {
         </a>
         <SearchBar />
         {session?.user ? (
-          <UserDropdown user={session.user} />
+          <UserDropdown user={session.user} id={session.user.id} />
         ) : (
           <Link href="/signIn" className={`w-40 ${buttonVariants()}`}>
             Sign In
