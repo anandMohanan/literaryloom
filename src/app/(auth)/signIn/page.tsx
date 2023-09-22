@@ -8,8 +8,8 @@ import { FC } from "react";
 interface signInPageProps {}
 
 export const metadata = {
-  title: "Taa - SignIn",
-  description: "Sign in page, Taa",
+  title: "Literary Loom - SignIn",
+  description: "Sign in page",
 };
 
 const SignInPage: FC<signInPageProps> = ({}) => {
