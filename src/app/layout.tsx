@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/Navbar";
@@ -9,7 +9,7 @@ export const metadata = {
   title: "Literary Loom",
 };
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Playfair_Display({ subsets: ["latin"] });
 export default function RootLayout({
   children,
   authModal,
@@ -18,21 +18,20 @@ export default function RootLayout({
   authModal: React.ReactNode;
 }) {
   return (
-       <html
+    <html
       lang="en"
       className={cn(
         "bg-primary-colour text-slate-900 antialiased light",
         inter.className
       )}
     >
-      
       <link rel="icon" href="/logo.png" type="image/icon type" />
       <body className="min-h-screen pt-12 bg-primary-colour antialiased">
         <NextTopLoader showSpinner={false} crawl={false} />
         <Providers>
           {/* @ts-expect-error server component */}
           <Navbar />
-          
+
           {authModal}
           <div className="container max-w-7xl mx-auto h-full pt-12">
             {children}{" "}

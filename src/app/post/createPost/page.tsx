@@ -2,7 +2,7 @@ import { Editor } from "@/components/Editor";
 import { Button } from "@/components/ui/Button";
 
 export const metadata = {
-  title: "Taa - Create Post",
+  title: "Literary Loom - Create Post",
   description: "Create post page",
 };
 

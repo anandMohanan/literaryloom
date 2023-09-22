@@ -20,7 +20,7 @@ interface PostPageProps {
 }
 
 export const metadata = {
-  title: "Taa - Post",
+  title: "Literary Loom - Post",
   description: "Post information",
 };
 

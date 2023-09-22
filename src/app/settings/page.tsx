@@ -4,8 +4,8 @@ import { authOptions, getAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Taa - Settings",
-  description: "Taa - Manage account",
+  title: "Literary Loom - Settings",
+  description: "Literry Loom - Manage account",
 };
 
 const page = async ({}) => {
