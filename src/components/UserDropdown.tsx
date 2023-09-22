@@ -14,7 +14,7 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 
 interface UserDropdownProps {
-  user: Pick<User, "name" | "image" | "email">;
+  user: Pick<User, "name" | "image" | "email" | "id">;
 }
 
 export const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
@@ -32,7 +32,7 @@ export const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
       <DropdownMenuContent className="bg-white" align="end">
         <div className="flex items-center justify-start gp-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            {user.name && <p>{user.name}</p>} - /{/** @ts-expect-error */}
+            {user.name && <p>{user.name}</p>} {/** @ts-expect-error */}
             {user.username && <p className="font-medium">{user.username}</p>}
             {user.email && (
               <p className="w-[200px] truncate text-sm text-zinc-700">
@@ -44,6 +44,9 @@ export const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href="/">Feed</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={`/profile/${user.id}`}>Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/settings">Settings</Link>
