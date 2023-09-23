@@ -46,7 +46,7 @@ export const PostFeed = ({ initialPosts }: PostFeedProps) => {
   if (posts.length == 0) {
     return (
       <>
-        <h1 className="text-center">No posts in this community.</h1>
+        <h1 className="text-center">No posts.</h1>
       </>
     );
   } else

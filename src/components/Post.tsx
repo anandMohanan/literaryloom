@@ -83,20 +83,20 @@ export const PostComponent = ({
           <div className="max-h-40 mt-1 text-xs text-gray-500 ">
             <span>
               Post created by{" "}
-              <a
+              <Link
                 className="hover:underline hover:decoration-wavy hover:text-green-300"
                 href={`/profile/${post.author.id}`}
               >
                 {post.author.username}
-              </a>{" "}
+              </Link>{" "}
             </span>{" "}
             {formatTimeToNow(new Date(post.createdAt))}
           </div>
-          <a href={`/post/${post.id}`}>
+          <Link href={`/post/${post.id}`}>
             <h1 className="text-lg font-semibold py-2 leading-6 text-gray-900">
               {post.title}
             </h1>
-          </a>
+          </Link>
           <div
             className="relative text-sm max-h-40 w-full overflow-clip"
             ref={postRef}

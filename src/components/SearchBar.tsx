@@ -15,6 +15,7 @@ import debounce from "lodash.debounce";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import { ExtendedPost } from "@/types/db";
 import React from "react";
+import Link from "next/link";
 
 // Define types for post and user results
 interface PostResult {
@@ -103,7 +104,7 @@ export const SearchBar = () => {
                       className="hover:bg-primary bg-white"
                     >
                       <CaseUpper className="mr-2 h-4 w-4" />
-                      <a href={`/post/${post.id}`}>{post.title} / </a>
+                      <Link href={`/post/${post.id}`}>{post.title} / </Link>
                     </CommandItem>
                   ))}
                 </CommandGroup>

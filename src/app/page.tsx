@@ -25,6 +25,13 @@ export default async function Home() {
             </p>
           </div>
           <dl className="-my-3  bg-deep-champagne  px-6 py-4 text-sm leading-6 ">
+            <p className="text-lg">
+              Welcome to Literary Loom, where words are woven into intricate
+              tapestries of imagination and emotion. We are a passionate
+              community of writers, readers, and literary enthusiasts who
+              believe in the power of storytelling to inspire, enlighten, and
+              connect us all.
+            </p>
             <div className="flex justify-between gap-x-4 py-3">
               <p className="text-black">
                 Your personal Literary Loom frontpage. Come here to check in

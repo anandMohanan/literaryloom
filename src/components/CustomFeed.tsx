@@ -1,13 +1,9 @@
 import { INFINITY_SCROLLING_PAGINATION_VALUE } from "@/config";
 import { db } from "@/lib/db";
-import { PostFeed } from "./PostFeed";
-import { getAuthSession } from "@/lib/auth";
 import { GeneralFeed } from "./GeneralFeed";
-import { getServerSession } from "next-auth";
+import { PostFeed } from "./PostFeed";
 
 export const CustomFeed = async () => {
-  const session = await getServerSession();
-
   let posts = await db.post.findMany({
     orderBy: {
       createdAt: "desc",
@@ -21,8 +17,9 @@ export const CustomFeed = async () => {
   });
   if (posts.length == 0) {
     return (
-      // @ts-expect-error server component
-      <GeneralFeed />
+      <h1 className="flex flex-col col-span-2 space-y-6 text-center">
+        Nothing to show now
+      </h1>
     );
   } else {
     return <PostFeed initialPosts={posts} />;

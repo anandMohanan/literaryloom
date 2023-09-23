@@ -7,6 +7,8 @@ export const metadata = {
   title: "Literary Loom - Settings",
   description: "Literry Loom - Manage account",
 };
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 const page = async ({}) => {
   const session = await getAuthSession();

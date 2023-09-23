@@ -1,22 +1,14 @@
+import { FollowButton } from "@/components/FollowButton";
 import { PostFeed } from "@/components/PostFeed";
-import { UserAvatar } from "@/components/UserAvatar";
+import { ProfileTab } from "@/components/ProfileTab";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
-import { Badge } from "@/components/ui/Badge";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { User } from "lucide-react";
-import { revalidatePath } from "next/cache";
-import Image from "next/image";
 
 interface ProfilePageProps {
   params: {
@@ -28,13 +20,15 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 const page = async ({ params }: ProfilePageProps) => {
+  const session = await getAuthSession();
+
   const user = await db.user.findFirst({
     where: {
       id: params.userId,
     },
     select: {
       image: true,
-      name: true,
+      username: true,
     },
   });
 
@@ -69,7 +63,7 @@ const page = async ({ params }: ProfilePageProps) => {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder={`${user?.name}`} readOnly />
+                <Input id="name" placeholder={`${user?.username}`} readOnly />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="id">Id</Label>
@@ -77,9 +71,11 @@ const page = async ({ params }: ProfilePageProps) => {
               </div>
             </div>
           </CardContent>
+          {/* <FollowButton params={params} /> */}
         </Card>
       </div>
       <PostFeed initialPosts={posts} />
+      {/* <ProfileTab /> */}
     </>
   );
 };
