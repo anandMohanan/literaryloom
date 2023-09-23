@@ -26,7 +26,7 @@ export const ProfileTab = () => {
             <CardHeader>
               <CardTitle>Account</CardTitle>
               <CardDescription>
-                Make changes to your account here. Click save when you're done.
+                Make changes to your account here. Click save when youre done.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -49,7 +49,7 @@ export const ProfileTab = () => {
             <CardHeader>
               <CardTitle>Password</CardTitle>
               <CardDescription>
-                Change your password here. After saving, you'll be logged out.
+                Change your password here. After saving, youll be logged out.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
