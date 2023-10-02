@@ -23,7 +23,7 @@ export async function PATCH(req: Request) {
     try {
       const body = await req.json();
       const { fileUrl, fileKey } = UseravatarValidator.parse(body);
-      console.log("File url", fileUrl);
+
       const user = await db.user.findFirst({
         where: {
           id: session.user.id,
@@ -52,7 +52,6 @@ export async function PATCH(req: Request) {
       if (error instanceof z.ZodError) {
         return new Response(error.message, { status: 400 });
       }
-      console.log(error, "errrooroororo");
 
       return new Response(
         "Could not update username at this time. Please try later",

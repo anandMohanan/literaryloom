@@ -26,7 +26,6 @@ export async function PATCH(req: Request) {
     if (!post) return new Response("Post not found", { status: 404 });
     if (post?.authorId !== session?.user.id)
       return new Response("Unauthorized", { status: 400 });
-    console.log("imagekeys", imageKeys);
 
     if (imageKeys?.data.length != 0) {
       await utapi.deleteFiles(imageKeys?.data);

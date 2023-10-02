@@ -15,8 +15,6 @@ export const UserAuthForm: FC = () => {
     try {
       await signIn("google").catch((e) => console.log("aaaa", e));
     } catch (error) {
-      console.log("eeeeeeeeee", error);
-
       toast({
         title: "There was a problem.",
         description: "There was an error logging in with google.",

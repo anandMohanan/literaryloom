@@ -16,8 +16,6 @@ const page = async ({}) => {
     redirect(authOptions.pages?.signIn || "/signIn");
   }
 
-  console.log(session);
-
   return (
     <div className="max-w-4xl mx-auto py-12">
       <div className="grid items-start gap-8">

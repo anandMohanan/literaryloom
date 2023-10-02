@@ -28,8 +28,6 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 const PostPage = async ({ params }: PostPageProps) => {
-  console.log("pramssss", params.postId);
-
   const cachedPost = (await redis.hgetall(
     `post:${params.postId}`
   )) as CachedPost;
@@ -47,7 +45,6 @@ const PostPage = async ({ params }: PostPageProps) => {
       },
     });
   }
-  console.log("params", params.postId);
 
   if (!post && !cachedPost) return notFound();
 

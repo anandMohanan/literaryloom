@@ -46,9 +46,6 @@ const page = async ({ params }: ProfilePageProps) => {
     },
   });
 
-  console.log("profile posts", posts);
-  console.log("params", params);
-  console.log("user", user);
   return (
     <>
       <div className=" mb-20">

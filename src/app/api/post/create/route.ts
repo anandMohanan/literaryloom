@@ -24,12 +24,9 @@ export async function POST(req: Request) {
         imageUrls: url,
       },
     });
-    console.log(url);
 
     return new Response(id);
   } catch (error) {
-    console.log("eeee", error);
-
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });
     } else {

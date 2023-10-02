@@ -93,7 +93,6 @@ export function UpdteUsernameComponent({
       router.refresh();
     },
   });
-  console.log("imaggee", user.image);
 
   return (
     <>

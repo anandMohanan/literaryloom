@@ -33,7 +33,7 @@ export const UpdateAvatarComponent = ({
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     // @ts-expect-error
     let file = Array.from(e.target.files);
-    console.log(file);
+
     setAvatarFile(file);
     setUpdateAvatarButtonState(true);
 
