@@ -14,7 +14,7 @@ export const Navbar = async () => {
       <div className="container max-w-7xl h-full mx-auto flex items-center justify-between gap-2">
         <HoverCard>
           <HoverCardTrigger asChild>
-            <a href="/" className="flex gap-2 items-center lg:w-40">
+            <Link href="/" className="flex gap-2 items-center lg:w-40">
               <p className="hidden text-zinc-700 text-sm font-medium md:block">
                 Literary Loom
               </p>
@@ -24,7 +24,7 @@ export const Navbar = async () => {
                 width={30}
                 height={30}
               />
-            </a>
+            </Link>
           </HoverCardTrigger>
           <HoverCardContent className="w-80">
             <div className="flex justify-between space-x-4">

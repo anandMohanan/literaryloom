@@ -119,7 +119,7 @@ export const SearchBar = () => {
                       className="hover:bg-primary-colour"
                     >
                       {/* Render user information */}
-                      <a href={`/profile/${user.id}`}>{user.username}</a>
+                      <Link href={`/profile/${user.id}`}>{user.username}</Link>
                     </CommandItem>
                   ))}
                 </CommandGroup>
