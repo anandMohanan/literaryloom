@@ -3,17 +3,12 @@ import { Button, buttonVariants } from "./ui/Button";
 import { UserDropdown } from "./UserDropdown";
 import { SearchBar } from "./SearchBar";
 import Image from "next/image";
-import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
 import { getAuthSession } from "@/lib/auth";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/HoverCard";
-import { CalendarDays } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 
 export const Navbar = async () => {
   const session = await getAuthSession();
-  console.log("sessss", session);
-
   return (
     <div className=" top-0 inset-x-0 h-fit bg-primary-colour  z-[10] py-2">
       <div className="container max-w-7xl h-full mx-auto flex items-center justify-between gap-2">
