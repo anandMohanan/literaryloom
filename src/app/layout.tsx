@@ -9,6 +9,9 @@ export const metadata = {
   title: "Literary Loom",
 };
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 const inter = Playfair_Display({ subsets: ["latin"] });
 export default function RootLayout({
   children,
