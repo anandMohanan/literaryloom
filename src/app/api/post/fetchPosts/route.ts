@@ -18,22 +18,41 @@ export async function GET(req: Request) {
         page: url.searchParams.get("page"),
         id: url.searchParams.get("id"),
       });
+    console.log(limit, page, id);
+    console.log((parseInt(page) - 1) * parseInt(limit));
+    let posts;
+    if (id !== "undefined") {
+      console.log("id is not undefined");
 
-    const posts = await db.post.findMany({
-      take: parseInt(limit),
-      skip: (parseInt(page) - 1) * parseInt(limit),
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        votes: true,
-        author: true,
-        comments: true,
-      },
-      where: {
-        authorId: id,
-      },
-    });
+      posts = await db.post.findMany({
+        take: parseInt(limit),
+        skip: (parseInt(page) - 1) * parseInt(limit),
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          votes: true,
+          author: true,
+          comments: true,
+        },
+        where: {
+          authorId: id,
+        },
+      });
+    } else {
+      posts = await db.post.findMany({
+        take: parseInt(limit),
+        skip: (parseInt(page) - 1) * parseInt(limit),
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          votes: true,
+          author: true,
+          comments: true,
+        },
+      });
+    }
     console.log("postssfetch", posts);
 
     return new Response(JSON.stringify(posts));
