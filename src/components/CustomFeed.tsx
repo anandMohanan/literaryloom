@@ -4,6 +4,9 @@ import { GeneralFeed } from "./GeneralFeed";
 import { PostFeed } from "./PostFeed";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 export const CustomFeed = async () => {
   const { getUser } = getKindeServerSession();
   const user = getUser();
@@ -19,7 +22,7 @@ export const CustomFeed = async () => {
     take: INFINITY_SCROLLING_PAGINATION_VALUE,
   });
 
-  console.log("postss", posts);
+  console.log("postssfeeed", posts);
 
   if (posts.length == 0) {
     return (

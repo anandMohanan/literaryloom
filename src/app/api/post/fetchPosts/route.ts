@@ -4,8 +4,6 @@ import { z } from "zod";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
 
   try {
     const { limit, page, id } = z
@@ -36,6 +34,7 @@ export async function GET(req: Request) {
         authorId: id,
       },
     });
+    console.log("postssfetch", posts);
 
     return new Response(JSON.stringify(posts));
   } catch (error) {

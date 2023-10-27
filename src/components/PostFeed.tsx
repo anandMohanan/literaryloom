@@ -62,6 +62,7 @@ export const PostFeed = ({ initialPosts, id, user }: PostFeedProps) => {
       fetchNextPage();
     }
   }, [entry, fetchNextPage]);
+  console.log(data, "datatattaa");
 
   const posts = data?.pages.flatMap((page) => page) ?? initialPosts;
   if (posts.length == 0) {

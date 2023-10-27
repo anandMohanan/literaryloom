@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { randomUUID } from "crypto";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
@@ -18,6 +19,7 @@ export async function GET() {
   });
 
   console.log(dbUser);
+  console.log(user);
 
   if (!dbUser) {
     console.log("inside create db");
@@ -26,7 +28,7 @@ export async function GET() {
       data: {
         id: user.id,
         email: user.email!,
-        username: user.given_name!,
+        username: randomUUID(),
       },
     });
   }
