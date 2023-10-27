@@ -2,8 +2,6 @@ import { db } from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { z } from "zod";
 
-export const runtime = "edge";
-
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const { getUser } = getKindeServerSession();
