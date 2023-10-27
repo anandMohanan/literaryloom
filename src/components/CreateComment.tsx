@@ -9,7 +9,7 @@ import { CommentRequest } from "@/lib/validators/comment";
 import axios, { AxiosError } from "axios";
 import { useCustomToast } from "@/hooks/use-custom-toast";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface CreateCommentProps {
@@ -23,7 +23,6 @@ export const CreateComment = ({
   replyToId,
   user,
 }: CreateCommentProps) => {
-  const { data: session } = useSession();
   const [input, setInput] = useState<string>("");
   const { loginToast } = useCustomToast();
   const router = useRouter();
