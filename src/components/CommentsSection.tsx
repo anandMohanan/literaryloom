@@ -1,13 +1,14 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Postcomment } from "./PostComment";
 import { CreateComment } from "./CreateComment";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface CommentsSectionProps {
   postId: string;
 }
 export const CommentsSection = async ({ postId }: CommentsSectionProps) => {
-  const session = await getAuthSession();
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
 
   const comments = await db.comment.findMany({
     where: {
@@ -20,9 +21,10 @@ export const CommentsSection = async ({ postId }: CommentsSectionProps) => {
   });
 
   return (
-    <div className="flex flex-col gp-y-4 mt-4">
+    <div className="flex flex-col gp-y-4 mt-4 z-10">
       <hr className="w-full h-px my-6" />
-      <CreateComment postId={postId} />
+
+      <CreateComment postId={postId} user={user} />
       <div className="flex flex-col gap-y-6 mt-4">
         {comments.map((topLevelComment) => {
           const voteAmt = topLevelComment.votes.reduce((acc, vote) => {
@@ -31,7 +33,7 @@ export const CommentsSection = async ({ postId }: CommentsSectionProps) => {
             return acc;
           }, 0);
           const vote = topLevelComment.votes.find(
-            (vote) => vote.userId === session?.user.id
+            (vote) => vote.userId === user.id
           );
 
           return (
@@ -44,6 +46,7 @@ export const CommentsSection = async ({ postId }: CommentsSectionProps) => {
                   comment={topLevelComment}
                   hide={false}
                   commentAuthorId={topLevelComment.author.id}
+                  user={user}
                 />{" "}
               </div>
             </div>

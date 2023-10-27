@@ -1,7 +1,7 @@
-import { getAuthSession } from "@/lib/auth";
 import type { Post, Vote } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { PostVoteClient } from "./PostVoteClient";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface PostVoteServerProps {
   postId: string;
@@ -23,7 +23,8 @@ export const PostVoteServer = async ({
   initialVote,
   getData,
 }: PostVoteServerProps) => {
-  const session = await getAuthSession();
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
 
   let _votesAmt: number = 0;
   let _currentVote: Vote["type"] | null | undefined = undefined;
@@ -39,9 +40,7 @@ export const PostVoteServer = async ({
       return acc;
     }, 0);
 
-    _currentVote = post.votes.find(
-      (vote) => vote.userId === session?.user?.id
-    )?.type;
+    _currentVote = post.votes.find((vote) => vote.userId === user?.id)?.type;
   } else {
     // passed as props
     _votesAmt = initialVotesAmt!;

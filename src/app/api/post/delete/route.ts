@@ -1,6 +1,6 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { DeletePostValidator } from "@/lib/validators/post";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Prisma } from "@prisma/client";
 import { utapi } from "uploadthing/server";
 import { z } from "zod";
@@ -8,7 +8,8 @@ import { z } from "zod";
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    const session = await getAuthSession();
+    const { getUser } = getKindeServerSession();
+    const user = getUser();
     const { postId } = DeletePostValidator.parse(body);
 
     const post = await db.post.findFirst({
@@ -24,7 +25,7 @@ export async function PATCH(req: Request) {
     let imageKeys = JSON.parse(post?.imageUrls as string);
 
     if (!post) return new Response("Post not found", { status: 404 });
-    if (post?.authorId !== session?.user.id)
+    if (post?.authorId !== user.id)
       return new Response("Unauthorized", { status: 400 });
 
     if (imageKeys?.data.length != 0) {

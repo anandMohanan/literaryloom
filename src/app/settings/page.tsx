@@ -1,6 +1,9 @@
 import { UpdateAvatarComponent } from "@/components/Settings/UpdateAvatar";
 import { UpdteUsernameComponent } from "@/components/Settings/UpdateUsername";
-import { authOptions, getAuthSession } from "@/lib/auth";
+
+import { db } from "@/lib/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -11,10 +14,23 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 const page = async ({}) => {
-  const session = await getAuthSession();
-  if (!session?.user) {
-    redirect(authOptions.pages?.signIn || "/signIn");
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
+
+  if (!user) {
+    redirect("/");
   }
+
+  const dbUser = await db.user.findFirst({
+    where: {
+      id: user.id!,
+    },
+    select: {
+      id: true,
+      username: true,
+      image: true,
+    },
+  });
 
   return (
     <div className="max-w-4xl mx-auto py-12">
@@ -24,18 +40,16 @@ const page = async ({}) => {
       <div className="grid gap-10">
         <UpdteUsernameComponent
           user={{
-            id: session.user.id,
-            username: session.user.username || "",
-            image: session.user.image || null,
-            name: session.user.name || "",
+            id: dbUser?.id!,
+            username: dbUser?.username || "",
+            image: dbUser?.image!,
           }}
         />
         <UpdateAvatarComponent
           user={{
-            id: session.user.id,
-            username: session.user.username || "",
-            image: session.user.image || null,
-            name: session.user.name || "",
+            id: dbUser?.id!,
+            username: dbUser?.username || "",
+            image: dbUser?.image!,
           }}
         />
       </div>

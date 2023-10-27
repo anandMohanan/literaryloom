@@ -1,19 +1,20 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { FollowValidator } from "@/lib/validators/follow";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const session = await getAuthSession();
+    const { getUser } = getKindeServerSession();
+    const user = getUser();
     const { id: userId, action } = FollowValidator.parse(body);
-    if (!session?.user) {
+    if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
     await db.following.create({
       data: {
-        id: session.user.id,
+        id: user.id!,
         User: {
           connect: {
             id: userId,
@@ -27,26 +28,20 @@ export async function POST(req: Request) {
         id: userId,
         User: {
           connect: {
-            id: session.user.id,
+            id: user.id!,
           },
         },
       },
     });
 
-    return {
+    return new Response("User followed/unfollowed successfully", {
       status: 200,
-      body: JSON.stringify({
-        message: "User followed/unfollowed successfully",
-      }),
-    };
+    });
   } catch (error) {
     console.error("Error:", error);
 
-    return {
-      status: 500,
-      body: JSON.stringify({
-        error: "An error occurred while following the user",
-      }),
-    };
+    return new Response("An error occurred while following the user", {
+      status: 400,
+    });
   }
 }

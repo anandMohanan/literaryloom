@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserAvatar } from "./UserAvatar";
 import { Comment, CommentVote, User } from "@prisma/client";
 import { formatTimeToNow } from "@/lib/utils";
@@ -15,14 +15,13 @@ import {
 import { TrashIcon } from "lucide-react";
 import { Button } from "./ui/Button";
 import { DialogHeader, DialogFooter } from "./ui/Dialog";
-import { getAuthSession } from "@/lib/auth";
+
 import { useMutation } from "@tanstack/react-query";
 import { DeletecommentRequest } from "@/lib/validators/comment";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 type ExtendedComment = Comment & {
   votes: CommentVote[];
@@ -36,6 +35,7 @@ interface PostcommentProps {
   postId: string;
   hide: boolean;
   commentAuthorId: string;
+  user?: KindeUser;
 }
 
 export const Postcomment = ({
@@ -45,8 +45,8 @@ export const Postcomment = ({
   postId,
   hide,
   commentAuthorId,
+  user,
 }: PostcommentProps) => {
-  const { data: session } = useSession();
   const router = useRouter();
 
   const { mutate: DeleteComment, isLoading } = useMutation({
@@ -70,12 +70,13 @@ export const Postcomment = ({
       });
     },
   });
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center">
         <UserAvatar
           user={{
-            name: comment.author.name || null,
+            name: comment.author.username || null,
             image: comment.author.image || null,
           }}
           className="h-6 w-6"
@@ -98,7 +99,7 @@ export const Postcomment = ({
           initialVotesAmt={votesAmt}
           initialVote={currentVote}
         />
-        {commentAuthorId === session?.user.id ? (
+        {commentAuthorId === user?.id ? (
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="subtle">

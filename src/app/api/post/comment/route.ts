@@ -1,14 +1,15 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { CreateCommentValidator } from "@/lib/validators/comment";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { z } from "zod";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { postId, text, replyToId } = CreateCommentValidator.parse(body);
-    const session = await getAuthSession();
-    if (!session?.user) {
+    const { getUser } = getKindeServerSession();
+    const user = getUser();
+    if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
 
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
       data: {
         postId,
         text,
-        authorId: session.user.id,
+        authorId: user.id!,
       },
     });
     return new Response("OK");

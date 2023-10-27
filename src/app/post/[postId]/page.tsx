@@ -47,6 +47,8 @@ const PostPage = async ({ params }: PostPageProps) => {
   }
 
   if (!post && !cachedPost) return notFound();
+  console.log(post);
+  console.log(cachedPost, "cachedPost");
 
   return (
     <div>
@@ -84,7 +86,7 @@ const PostPage = async ({ params }: PostPageProps) => {
               <Loader2 className="h-5 w-5 animate-spin text-zinc-500" />
             }
           >
-            {/* @ts-expect-error Server Component */}
+            {/*@ts-expect-error Server component */}
             <CommentsSection postId={post?.id ?? cachedPost.id} />
           </Suspense>
         </div>

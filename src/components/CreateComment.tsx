@@ -10,13 +10,19 @@ import axios, { AxiosError } from "axios";
 import { useCustomToast } from "@/hooks/use-custom-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface CreateCommentProps {
   postId: string;
   replyToId?: string;
+  user?: KindeUser;
 }
 
-export const CreateComment = ({ postId, replyToId }: CreateCommentProps) => {
+export const CreateComment = ({
+  postId,
+  replyToId,
+  user,
+}: CreateCommentProps) => {
   const { data: session } = useSession();
   const [input, setInput] = useState<string>("");
   const { loginToast } = useCustomToast();
@@ -48,7 +54,7 @@ export const CreateComment = ({ postId, replyToId }: CreateCommentProps) => {
   });
   return (
     <div className="grid w-full gap-1.5">
-      {session?.user.id ? (
+      {user?.id ? (
         <>
           <Label htmlFor="comment"> Your comment </Label>
           <div className="mt-2">

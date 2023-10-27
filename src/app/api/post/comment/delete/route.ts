@@ -1,17 +1,18 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import {
   CreateCommentValidator,
   DeleteCommentValidator,
 } from "@/lib/validators/comment";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { z } from "zod";
 
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
     const { commentId } = DeleteCommentValidator.parse(body);
-    const session = await getAuthSession();
-    if (!session?.user) {
+    const { getUser } = await getKindeServerSession();
+    const user = getUser();
+    if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
 

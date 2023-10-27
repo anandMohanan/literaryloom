@@ -19,7 +19,11 @@ import { useState } from "react";
 import { User } from "@prisma/client";
 
 interface UserNameFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  user: Pick<User, "id" | "username" | "image" | "name">;
+  user: {
+    username: string;
+    id: string;
+    image: string;
+  };
 }
 
 export const UpdateAvatarComponent = ({
@@ -133,7 +137,7 @@ export const UpdateAvatarComponent = ({
       <UserAvatar
         className="h-8 w-8 ml-6"
         user={{
-          name: user.name || null,
+          name: user.username || null,
           image: user.image || null,
         }}
       />

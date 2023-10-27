@@ -3,12 +3,12 @@
 import { formatTimeToNow } from "@/lib/utils";
 import { Post, User, Vote } from "@prisma/client";
 import { MessageSquare, Share, TrashIcon } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditorOutput } from "./EditorOutput";
 import { PostVoteClient } from "./postVote/PostVoteClient";
 import { Button, buttonVariants } from "./ui/Button";
-import { useSession } from "next-auth/react";
-import { useMutation } from "@tanstack/react-query";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { DeletePostPayload } from "@/lib/validators/post";
 import { useRouter } from "next/navigation";
@@ -26,6 +26,10 @@ import {
 import { Label } from "./ui/Label";
 import { Input } from "./ui/Input";
 import { revalidatePath } from "next/cache";
+import {
+  KindeUser,
+  getKindeServerSession,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 
 type PartialVote = Pick<Vote, "type">;
 
@@ -37,6 +41,7 @@ interface PostComponentProps {
   commentAmt: number;
   votesAmt: number;
   currentVote?: PartialVote;
+  user?: KindeUser;
 }
 
 export const PostComponent = ({
@@ -44,13 +49,42 @@ export const PostComponent = ({
   commentAmt,
   votesAmt,
   currentVote,
+  user,
 }: PostComponentProps) => {
   const postRef = useRef<HTMLDivElement>(null);
-  const { data: session } = useSession();
+
   const router = useRouter();
+  // const [user, setUser] = useState<any>();
+  // const [authStatus, setAuthStatus] = useState(null);
+
+  // console.log(user);
+
+  // // useEffect(() => {
+  // //   const getKindeSession = async () => {
+  // //     // const res = await axios.get("/api/kindeSession");
+  // //     // const data = await res();
+  // //     setUser(data.user);
+  // //     console.log(data.user, " data user");
+  // //     setAuthStatus(data.authenticated);
+  // //   };
+
+  // //   getKindeSession();
+  // // }, []);
+
+  // const { data } = useQuery({
+  //   queryFn: async () => {
+  //     const { data } = await axios.get("/api/kindeSession");
+  //     return data;
+  //   },
+  // });
+
+  // setUser(data.user);
+  // console.log(data.user, " data user");
+  // setAuthStatus(data.authenticated);
+
   const { mutate: deletePost, isLoading: deleteLoading } = useMutation({
     mutationFn: async ({ postId }: DeletePostPayload) => {
-      if (session?.user.id !== post.authorId) return;
+      if (user?.id !== post.authorId) return;
       const payload: DeletePostPayload = { postId };
       const { data } = await axios.patch(`/api/post/delete`, payload);
       return data;
@@ -63,7 +97,7 @@ export const PostComponent = ({
       });
     },
     onSuccess: () => {
-      router.refresh();
+      router.push("/");
       return toast({
         title: "Post deleted successfully",
         description: "",
@@ -119,7 +153,7 @@ export const PostComponent = ({
             <MessageSquare className="h-4 w-4" /> {commentAmt}
           </Link>
           <hr />
-          {post.authorId === session?.user.id ? (
+          {post.authorId === user?.id ? (
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline">

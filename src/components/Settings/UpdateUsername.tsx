@@ -25,7 +25,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+
 import { UserAvatar } from "../UserAvatar";
 import { Avatar, AvatarImage } from "../ui/Avatar";
 import { uploadFiles } from "@/lib/uploadthing";
@@ -37,7 +37,11 @@ import { AvatarFallback } from "@radix-ui/react-avatar";
 import { UserPosts } from "../UserPosts";
 
 interface UserNameFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  user: Pick<User, "id" | "username" | "image" | "name">;
+  user: {
+    username: string;
+    id: string;
+    image: string;
+  };
 }
 
 type FormData = z.infer<typeof UsernameValidator>;

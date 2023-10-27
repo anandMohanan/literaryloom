@@ -1,7 +1,7 @@
 import { Playfair_Display } from "next/font/google";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { Toaster } from "@/components/ui/Toaster";
 import { Providers } from "@/components/Providers";
 import NextTopLoader from "nextjs-toploader";
@@ -15,10 +15,8 @@ export const fetchCache = "force-no-store";
 const inter = Playfair_Display({ subsets: ["latin"] });
 export default function RootLayout({
   children,
-  authModal,
 }: {
   children: React.ReactNode;
-  authModal: React.ReactNode;
 }) {
   return (
     <html
@@ -32,10 +30,9 @@ export default function RootLayout({
       <body className="min-h-screen pt-12 bg-primary-colour antialiased">
         <NextTopLoader showSpinner={false} crawl={false} />
         <Providers>
-          {/* @ts-expect-error server component */}
+          {/*@ts-expect-error server component */}
           <Navbar />
 
-          {authModal}
           <div className="container max-w-7xl mx-auto h-full pt-12">
             {children}{" "}
           </div>

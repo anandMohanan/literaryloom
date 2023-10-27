@@ -5,16 +5,21 @@ import { ExtendedPost } from "@/types/db";
 import { useIntersection } from "@mantine/hooks";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+
 import { useEffect, useRef } from "react";
 import { PostComponent } from "./Post";
+import {
+  KindeUser,
+  getKindeServerSession,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface PostFeedProps {
   initialPosts: ExtendedPost[];
+  id?: string;
+  user?: KindeUser;
 }
 
-export const PostFeed = ({ initialPosts }: PostFeedProps) => {
-  const { data: session } = useSession();
+export const PostFeed = ({ initialPosts, id, user }: PostFeedProps) => {
   const lastPostRef = useRef<HTMLElement>(null);
   const { ref, entry } = useIntersection({
     root: lastPostRef.current,
@@ -23,7 +28,7 @@ export const PostFeed = ({ initialPosts }: PostFeedProps) => {
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
     ["infinite-query"],
     async ({ pageParam = 1 }) => {
-      const query = `/api/post/fetchPosts?limit=${INFINITY_SCROLLING_PAGINATION_VALUE}&page=${pageParam}`;
+      const query = `/api/post/fetchPosts?limit=${INFINITY_SCROLLING_PAGINATION_VALUE}&page=${pageParam}&id=${id}`;
 
       const { data } = await axios.get(query);
       return data as ExtendedPost[];
@@ -59,7 +64,7 @@ export const PostFeed = ({ initialPosts }: PostFeedProps) => {
             return acc;
           }, 0);
           const currentVote = post.votes.find(
-            (vote) => vote.userId === session?.user.id
+            (vote) => vote.userId === user?.id
           );
 
           if (i === posts.length - 1) {
@@ -70,6 +75,7 @@ export const PostFeed = ({ initialPosts }: PostFeedProps) => {
                   post={post}
                   currentVote={currentVote}
                   votesAmt={votesAmt}
+                  user={user}
                 />
               </li>
             );
@@ -81,6 +87,7 @@ export const PostFeed = ({ initialPosts }: PostFeedProps) => {
                 currentVote={currentVote}
                 votesAmt={votesAmt}
                 key={post.id}
+                user={user}
               />
             );
           }

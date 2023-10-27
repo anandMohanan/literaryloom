@@ -1,25 +1,26 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { SubscribeToCommunityValidator } from "@/lib/validators/communities";
 import { PostValidator } from "@/lib/validators/post";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { z } from "zod";
 
 export async function POST(req: Request) {
   try {
-    const session = await getAuthSession();
-    if (!session?.user) {
+    const { getUser } = getKindeServerSession();
+    const user = getUser();
+    if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
 
     const body = await req.json();
 
     const { title, content, imageUrls } = PostValidator.parse(body);
+    console.log({ title, content, imageUrls });
 
     let url = JSON.stringify(imageUrls);
     const { id } = await db.post.create({
       data: {
         title,
-        authorId: session?.user.id,
+        authorId: user.id!,
         content,
         imageUrls: url,
       },

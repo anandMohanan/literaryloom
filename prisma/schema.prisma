@@ -6,74 +6,29 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider     = "cockroachdb"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+
+model User {
+  id          String        @id @unique
+  email       String        @unique
+  username    String        @unique
+  image       String?
+  imageKey    String?
+  Post        Post[]
+  Comment     Comment[]
+  Vote        Vote[]
+  CommentVote CommentVote[]
+  Following   Following[]
+  Follower    Follower[]
 }
 
 enum VoteType {
   UP
   DOWN
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  username      String?   @unique
-  email         String?   @unique
-  emailVerified DateTime?
-
-  image        String?
-  imageKey     String?
-  accounts     Account[]
-  sessions     Session[]
-  posts        Post[]
-  comments     Comment[]
-  commentVotes CommentVote[]
-  votes        Vote[]
-  userId       String?
-
-  following Following[]
-  followers Follower[]
-}
-
-model Following {
-  id     String @id @default(cuid())
-  userId String
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Follower {
-  id     String @id @default(cuid())
-  userId String
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Post {
@@ -90,6 +45,8 @@ model Post {
   votes    Vote[]
 
   imageUrls Json?
+
+  @@index([authorId])
 }
 
 model Comment {
@@ -108,6 +65,9 @@ model Comment {
 
   votes     CommentVote[]
   commentId String?
+
+  @@index([authorId])
+  @@index([postId])
 }
 
 model Vote {
@@ -118,6 +78,8 @@ model Vote {
   type   VoteType
 
   @@id([userId, postId])
+  @@index([userId])
+  @@index([postId])
 }
 
 model CommentVote {
@@ -128,4 +90,22 @@ model CommentVote {
   type      VoteType
 
   @@id([userId, commentId])
+  @@index([userId])
+  @@index([commentId])
+}
+
+model Following {
+  id     String @id @default(cuid())
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Follower {
+  id     String @id @default(cuid())
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

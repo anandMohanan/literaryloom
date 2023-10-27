@@ -1,21 +1,26 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { z } from "zod";
+
+export const runtime = "edge";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const session = await getAuthSession();
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
 
   try {
-    const { limit, page } = z
+    const { limit, page, id } = z
       .object({
         limit: z.string(),
         page: z.string(),
+        id: z.string(),
       })
       .parse({
         communityName: url.searchParams.get("communityName"),
         limit: url.searchParams.get("limit"),
         page: url.searchParams.get("page"),
+        id: url.searchParams.get("id"),
       });
 
     const posts = await db.post.findMany({
@@ -28,6 +33,9 @@ export async function GET(req: Request) {
         votes: true,
         author: true,
         comments: true,
+      },
+      where: {
+        authorId: id,
       },
     });
 

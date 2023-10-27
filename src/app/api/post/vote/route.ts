@@ -1,8 +1,8 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redis } from "@/lib/redis";
 import { PostVoteValidator } from "@/lib/validators/vote";
 import type { CachedPost } from "@/types/redis";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { z } from "zod";
 const CACHE_AFTER_UPVOTES = 1;
 
@@ -10,14 +10,15 @@ export async function PATCH(req: Request) {
   try {
     const body = await req.json();
     const { postId, voteType } = PostVoteValidator.parse(body);
-    const session = await getAuthSession();
-    if (!session?.user) {
+    const { getUser } = getKindeServerSession();
+    const user = getUser();
+    if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
 
     const existingVote = await db.vote.findFirst({
       where: {
-        userId: session.user.id,
+        userId: user.id!,
         postId,
       },
     });
@@ -42,7 +43,7 @@ export async function PATCH(req: Request) {
           where: {
             userId_postId: {
               postId,
-              userId: session.user.id,
+              userId: user.id!,
             },
           },
         });
@@ -52,7 +53,7 @@ export async function PATCH(req: Request) {
         where: {
           userId_postId: {
             postId,
-            userId: session.user.id,
+            userId: user.id!,
           },
         },
         data: {
@@ -82,7 +83,7 @@ export async function PATCH(req: Request) {
     await db.vote.create({
       data: {
         type: voteType,
-        userId: session.user.id,
+        userId: user.id!,
         postId,
       },
     });

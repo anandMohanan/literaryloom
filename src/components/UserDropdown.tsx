@@ -1,6 +1,3 @@
-"use client";
-
-import { User } from "next-auth";
 import { FC } from "react";
 import {
   DropdownMenu,
@@ -12,9 +9,15 @@ import {
 import { UserAvatar } from "./UserAvatar";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { KindeUser, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface UserDropdownProps {
-  user: Pick<User, "name" | "image" | "email">;
+  user: {
+    image: string;
+    id: string;
+    email: string;
+    username: string;
+  };
   id: string;
 }
 
@@ -25,7 +28,7 @@ export const UserDropdown: FC<UserDropdownProps> = ({ user, id }) => {
         <UserAvatar
           className="h-8 w-8"
           user={{
-            name: user.name || null,
+            name: user.username || null,
             image: user.image,
           }}
         />
@@ -34,7 +37,7 @@ export const UserDropdown: FC<UserDropdownProps> = ({ user, id }) => {
         <div className="flex items-center justify-start gp-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             {/* {user.name && <p>{user.name}</p>}  */}
-            {/** @ts-expect-error */}
+
             {user.username && <p className="font-medium">{user.username}</p>}
             {user.email && (
               <p className="w-[200px] truncate text-sm text-zinc-700">
@@ -55,16 +58,8 @@ export const UserDropdown: FC<UserDropdownProps> = ({ user, id }) => {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onSelect={(e) => {
-            e.preventDefault();
-            signOut({
-              callbackUrl: `${window.location.origin}/signIn`,
-            });
-          }}
-          className="cursor-pointer"
-        >
-          Sign out
+        <DropdownMenuItem asChild>
+          <LogoutLink>Log out</LogoutLink>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

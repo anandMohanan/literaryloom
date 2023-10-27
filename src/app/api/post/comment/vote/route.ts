@@ -1,8 +1,8 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { CreateCommentValidator } from "@/lib/validators/comment";
 
 import { CommentVoteValidator, PostVoteValidator } from "@/lib/validators/vote";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { z } from "zod";
 
@@ -10,14 +10,15 @@ export async function PATCH(req: Request) {
   try {
     const body = await req.json();
     const { commentId, voteType } = CommentVoteValidator.parse(body);
-    const session = await getAuthSession();
-    if (!session?.user) {
+    const { getUser } = getKindeServerSession();
+    const user = getUser();
+    if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
 
     const existingVote = await db.commentVote.findFirst({
       where: {
-        userId: session.user.id,
+        userId: user.id!,
         commentId,
       },
     });
@@ -28,7 +29,7 @@ export async function PATCH(req: Request) {
           where: {
             userId_commentId: {
               commentId,
-              userId: session.user.id,
+              userId: user.id!,
             },
           },
         });
@@ -38,7 +39,7 @@ export async function PATCH(req: Request) {
           where: {
             userId_commentId: {
               commentId,
-              userId: session.user.id,
+              userId: user.id!,
             },
           },
           data: {
@@ -51,7 +52,7 @@ export async function PATCH(req: Request) {
     await db.commentVote.create({
       data: {
         type: voteType,
-        userId: session.user.id,
+        userId: user.id!,
         commentId,
       },
     });
