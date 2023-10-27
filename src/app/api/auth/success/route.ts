@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   const { getUser } = getKindeServerSession();
@@ -30,5 +31,5 @@ export async function GET() {
     });
   }
 
-  return redirect(`http://literaryloom.vercel.app/`);
+  return NextResponse.redirect(`http://literaryloom.vercel.app/`);
 }
