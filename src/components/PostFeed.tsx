@@ -25,21 +25,37 @@ export const PostFeed = ({ initialPosts, id, user }: PostFeedProps) => {
     root: lastPostRef.current,
     threshold: 1,
   });
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-    ["infinite-query"],
-    async ({ pageParam = 1 }) => {
+
+  // const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
+  //   ["infinite-query"],
+  // async ({ pageParam = 1 }) => {
+  //   const query = `/api/post/fetchPosts?limit=${INFINITY_SCROLLING_PAGINATION_VALUE}&page=${pageParam}&id=${id}`;
+
+  //   const { data } = await axios.get(query);
+  //   return data as ExtendedPost[];
+  // },
+  //   {
+  // getNextPageParam: (_: any, pages: string | any[]) => {
+  //   return pages.length + 1;
+  // },
+  //     initialData: { pages: [initialPosts], pageParams: [1] },
+  //   }
+  // );
+
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ["infinite-query"],
+    queryFn: async ({ pageParam = 1 }) => {
       const query = `/api/post/fetchPosts?limit=${INFINITY_SCROLLING_PAGINATION_VALUE}&page=${pageParam}&id=${id}`;
 
       const { data } = await axios.get(query);
       return data as ExtendedPost[];
     },
-    {
-      getNextPageParam: (_, pages) => {
-        return pages.length + 1;
-      },
-      initialData: { pages: [initialPosts], pageParams: [1] },
-    }
-  );
+    initialPageParam: 1,
+    getNextPageParam: (_: any, pages: string | any[]) => {
+      return pages.length + 1;
+    },
+    initialData: { pages: [initialPosts], pageParams: [1] },
+  });
 
   useEffect(() => {
     if (entry?.isIntersecting) {
@@ -58,13 +74,17 @@ export const PostFeed = ({ initialPosts, id, user }: PostFeedProps) => {
     return (
       <ul className="flex flex-col col-span-2 space-y-6 mb-10 lg:mb-30">
         {posts.map((post, i) => {
-          const votesAmt = post.votes.reduce((acc, vote) => {
-            if (vote.type === "UP") return acc + 1;
-            if (vote.type === "DOWN") return acc - 1;
-            return acc;
-          }, 0);
+          const votesAmt = post.votes.reduce(
+            (acc: number, vote: { type: string }) => {
+              if (vote.type === "UP") return acc + 1;
+              if (vote.type === "DOWN") return acc - 1;
+              return acc;
+            },
+            0
+          );
           const currentVote = post.votes.find(
-            (vote) => vote.userId === user?.id
+            (vote: { userId: string | null | undefined }) =>
+              vote.userId === user?.id
           );
 
           if (i === posts.length - 1) {

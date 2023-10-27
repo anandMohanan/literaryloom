@@ -52,37 +52,13 @@ export const PostComponent = ({
   user,
 }: PostComponentProps) => {
   const postRef = useRef<HTMLDivElement>(null);
-
   const router = useRouter();
-  // const [user, setUser] = useState<any>();
-  // const [authStatus, setAuthStatus] = useState(null);
 
-  // console.log(user);
-
-  // // useEffect(() => {
-  // //   const getKindeSession = async () => {
-  // //     // const res = await axios.get("/api/kindeSession");
-  // //     // const data = await res();
-  // //     setUser(data.user);
-  // //     console.log(data.user, " data user");
-  // //     setAuthStatus(data.authenticated);
-  // //   };
-
-  // //   getKindeSession();
-  // // }, []);
-
-  // const { data } = useQuery({
-  //   queryFn: async () => {
-  //     const { data } = await axios.get("/api/kindeSession");
-  //     return data;
-  //   },
-  // });
-
-  // setUser(data.user);
-  // console.log(data.user, " data user");
-  // setAuthStatus(data.authenticated);
-
-  const { mutate: deletePost, isLoading: deleteLoading } = useMutation({
+  const {
+    mutate: deletePost,
+    isPending: deleteLoading,
+    isSuccess: deleteSuccess,
+  } = useMutation({
     mutationFn: async ({ postId }: DeletePostPayload) => {
       if (user?.id !== post.authorId) return;
       const payload: DeletePostPayload = { postId };
@@ -97,7 +73,6 @@ export const PostComponent = ({
       });
     },
     onSuccess: () => {
-      router.push("/");
       return toast({
         title: "Post deleted successfully",
         description: "",
@@ -105,6 +80,10 @@ export const PostComponent = ({
       });
     },
   });
+
+  if (deleteSuccess) {
+    router.refresh();
+  }
   return (
     <div className="rounded-md bg-deep-champagne shadow border border-black border-double">
       <div className="px-6 py-4 flex justify-between ">

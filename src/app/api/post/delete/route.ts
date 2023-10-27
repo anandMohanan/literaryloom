@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
+import { utapi } from "@/lib/uploadthing";
 import { DeletePostValidator } from "@/lib/validators/post";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Prisma } from "@prisma/client";
-import { utapi } from "uploadthing/server";
+
 import { z } from "zod";
 
 export async function PATCH(req: Request) {
@@ -29,6 +29,8 @@ export async function PATCH(req: Request) {
       return new Response("Unauthorized", { status: 400 });
 
     if (imageKeys?.data.length != 0) {
+      console.log("here");
+
       await utapi.deleteFiles(imageKeys?.data);
     }
     await db.post.delete({

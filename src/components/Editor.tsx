@@ -9,13 +9,14 @@ import TextareaAutosize from "react-textarea-autosize";
 import { z } from "zod";
 
 import { toast } from "@/hooks/use-toast";
-import { uploadFiles } from "@/lib/uploadthing";
+
 import { PostCreatePayload, PostValidator } from "@/lib/validators/post";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 import "@/styles/editor.css";
 import { Button } from "./ui/Button";
+import { uploadFiles } from "@/lib/clientUploadthing";
 
 const FormSchema = z.object({
   title: z
@@ -45,7 +46,7 @@ export const Editor: React.FC = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const pathname = usePathname();
   const [imageUrls, setImageUrls] = useState<{ data: string[] }>({ data: [] });
-  const { mutate: createPost, isLoading } = useMutation({
+  const { mutate: createPost, isPending } = useMutation({
     mutationFn: async ({ title, content }: PostCreatePayload) => {
       const payload: PostCreatePayload = {
         title,
@@ -101,20 +102,25 @@ export const Editor: React.FC = () => {
               endpoint: "/api/link",
             },
           },
+
           image: {
             class: ImageTool,
             config: {
               uploader: {
                 async uploadByFile(file: File) {
                   // upload to uploadthing
-                  const [res] = await uploadFiles([file], "imageUploader");
-                  let tempArray: string[] = [...imageUrls.data, res.fileKey];
+                  const [res] = await uploadFiles({
+                    files: [file],
+                    endpoint: "imageUploader",
+                  });
+
+                  let tempArray: string[] = [...imageUrls.data, res.key!];
                   setImageUrls({ ...imageUrls, data: tempArray });
                   return {
                     success: 1,
                     file: {
-                      key: res.fileKey,
-                      url: res.fileUrl,
+                      key: res.key,
+                      url: res.url,
                     },
                   };
                 },
@@ -222,7 +228,7 @@ export const Editor: React.FC = () => {
           type="submit"
           className="w-full"
           form="post-form"
-          isLoading={isLoading}
+          isLoading={isPending}
         >
           Post
         </Button>

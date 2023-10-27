@@ -44,7 +44,6 @@ interface EditorOutputProps {
 }
 export const EditorOutput = ({ content }: EditorOutputProps) => {
   return (
-    // @ts-expect-error
     <Output
       data={content}
       style={style}

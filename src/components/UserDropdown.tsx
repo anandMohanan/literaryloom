@@ -1,15 +1,15 @@
+import Link from "next/link";
 import { FC } from "react";
+import { UserAvatar } from "./UserAvatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "./ui/DropdownMenu";
-import { UserAvatar } from "./UserAvatar";
-import Link from "next/link";
-import { signOut } from "next-auth/react";
-import { KindeUser, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
+
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface UserDropdownProps {
   user: {
@@ -28,7 +28,7 @@ export const UserDropdown: FC<UserDropdownProps> = ({ user, id }) => {
         <UserAvatar
           className="h-8 w-8"
           user={{
-            name: user.username || null,
+            name: user.username || undefined,
             image: user.image,
           }}
         />

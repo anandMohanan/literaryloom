@@ -8,7 +8,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import router from "next/router";
-import { uploadFiles } from "../UploadThing";
+
 import { UserAvatar } from "../UserAvatar";
 
 import { Button } from "../ui/Button";
@@ -17,6 +17,7 @@ import { Input } from "../ui/Input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { User } from "@prisma/client";
+import { uploadFiles } from "@/lib/clientUploadthing";
 
 interface UserNameFormProps extends React.HTMLAttributes<HTMLFormElement> {
   user: {
@@ -46,13 +47,16 @@ export const UpdateAvatarComponent = ({
     // updateUseravatar({ fileUrl: res.fileUrl });
   };
 
-  const { mutate: updateUseravatar, isLoading: isAvatarLoading } = useMutation({
+  const { mutate: updateUseravatar, isPending: isAvatarLoading } = useMutation({
     mutationFn: async () => {
-      const [res] = await uploadFiles(avatarFile as File[], "imageUploader");
+      const [res] = await uploadFiles({
+        files: avatarFile as File[],
+        endpoint: "imageUploader",
+      });
 
       const payload: UseravatarRequest = {
-        fileUrl: res.fileUrl,
-        fileKey: res.fileKey,
+        fileUrl: res.url!,
+        fileKey: res.key!,
       };
 
       const { data } = await axios.patch(
@@ -85,7 +89,7 @@ export const UpdateAvatarComponent = ({
     },
   });
 
-  const { mutate: removeUseravatar, isLoading: isRemoveAvatarLoading } =
+  const { mutate: removeUseravatar, isPending: isRemoveAvatarLoading } =
     useMutation({
       mutationFn: async ({ userId }: RemoveUseravatarRequest) => {
         const payload: RemoveUseravatarRequest = { userId };
@@ -137,8 +141,9 @@ export const UpdateAvatarComponent = ({
       <UserAvatar
         className="h-8 w-8 ml-6"
         user={{
-          name: user.username || null,
-          image: user.image || null,
+          name: user.username || undefined,
+          image: user.image || undefined,
+          email: undefined,
         }}
       />
       {/* <input type="file" /> */}

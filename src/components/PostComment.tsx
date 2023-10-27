@@ -49,7 +49,7 @@ export const Postcomment = ({
 }: PostcommentProps) => {
   const router = useRouter();
 
-  const { mutate: DeleteComment, isLoading } = useMutation({
+  const { mutate: DeleteComment, isPending } = useMutation({
     mutationFn: async ({ commentId }: DeletecommentRequest) => {
       const payload: DeletecommentRequest = { commentId };
       await axios.patch("/api/post/comment/delete", payload);
@@ -76,8 +76,9 @@ export const Postcomment = ({
       <div className="flex items-center">
         <UserAvatar
           user={{
-            name: comment.author.username || null,
-            image: comment.author.image || null,
+            name: comment.author.username!,
+            image: comment.author.image!,
+            email: comment.author.email,
           }}
           className="h-6 w-6"
         />
@@ -116,7 +117,7 @@ export const Postcomment = ({
               <DialogFooter>
                 <Button
                   type="submit"
-                  isLoading={isLoading}
+                  isLoading={isPending}
                   onClick={() => {
                     DeleteComment({ commentId: comment.id });
                   }}

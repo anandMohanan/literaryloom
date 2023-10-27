@@ -1,10 +1,8 @@
 import { CustomFeed } from "@/components/CustomFeed";
-import { GeneralFeed } from "@/components/GeneralFeed";
 import { buttonVariants } from "@/components/ui/Button";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { Home as HomeIcon } from "lucide-react";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -54,7 +52,7 @@ export default async function Home() {
             )}
           </dl>
         </div>
-        {/*@ts-expect-error server component */}
+
         <CustomFeed />
         <div></div>
         {/* </div> */}

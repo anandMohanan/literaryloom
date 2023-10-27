@@ -1,5 +1,4 @@
 import { Editor } from "@/components/Editor";
-import { Button } from "@/components/ui/Button";
 
 export const metadata = {
   title: "Literary Loom - Create Post",

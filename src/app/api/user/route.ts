@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { utapi } from "@/lib/uploadthing";
 import {
   UseravatarValidator,
   removeUseravatarValidator,
@@ -6,7 +7,6 @@ import {
 import { UsernameValidator } from "@/lib/validators/username";
 import { ExtendedPost, SearchPost } from "@/types/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { utapi } from "uploadthing/server";
 import { z } from "zod";
 
 export async function PATCH(req: Request) {

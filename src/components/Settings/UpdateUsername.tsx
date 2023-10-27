@@ -24,18 +24,6 @@ import { UsernameValidator } from "@/lib/validators/username";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 
-import Link from "next/link";
-
-import { UserAvatar } from "../UserAvatar";
-import { Avatar, AvatarImage } from "../ui/Avatar";
-import { uploadFiles } from "@/lib/uploadthing";
-import {
-  RemoveUseravatarRequest,
-  UseravatarRequest,
-} from "@/lib/validators/useravatar";
-import { AvatarFallback } from "@radix-ui/react-avatar";
-import { UserPosts } from "../UserPosts";
-
 interface UserNameFormProps extends React.HTMLAttributes<HTMLFormElement> {
   user: {
     username: string;
@@ -63,7 +51,7 @@ export function UpdteUsernameComponent({
     },
   });
 
-  const { mutate: updateUsername, isLoading } = useMutation({
+  const { mutate: updateUsername, isPending } = useMutation({
     mutationFn: async ({ name }: FormData) => {
       const payload: FormData = { name };
 
@@ -134,7 +122,7 @@ export function UpdteUsernameComponent({
             </div>
           </CardContent>
           <CardFooter>
-            <Button isLoading={isLoading}>Change name</Button>
+            <Button isLoading={isPending}>Change name</Button>
           </CardFooter>
         </Card>
       </form>
